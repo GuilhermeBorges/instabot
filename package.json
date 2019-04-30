@@ -1,6 +1,6 @@
 {
   "name": "instagram-bot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Proof of concept for an Instagram bot using puppeteer",
   "main": "index.js",
   "scripts": {
