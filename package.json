@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/GuilhermeBorges/instabot/issues"
   },
-  "homepage": "https://github.com/GuilhermeBorges/instabot#readme"
+  "homepage": "https://github.com/GuilhermeBorges/instabot#readme",
+  "dependencies": {
+    "puppeteer": "^1.15.0"
+  }
 }
