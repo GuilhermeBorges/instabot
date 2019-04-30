@@ -57,9 +57,7 @@ function fillCredentials(page) {
 }
 function login(page) {
   return page.evaluate(() => {
-    const botoesLogin = Array.from(document.querySelectorAll('button'))
-      .filter(button => /log in/gi.test(button.innerText))
-    if (botoesLogin.length > 0) botoesLogin[0].click()
+    document.querySelector('button[type=\"submit\"]').click()
   }).then(() => page)
 }
 
