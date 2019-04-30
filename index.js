@@ -20,7 +20,7 @@ function main() {
 }
 
 function getAndSetBrowser(browser) {
-  return puppeteer.launch(browserOptions)
+  return puppeteer.launch(browserOptions())
     .then(b => {
       browser = b
       return browser
@@ -35,7 +35,7 @@ function showBrowser(bool, options) {
   options.headless = !bool
   if (!options.args) options.args = []
   options.args.push(`--window-size=${VIDEO_WIDTH},${VIDEO_HEIGHT}`)
-  return showBroser
+  return options
 }
 function getPage(browser) {
   return browser.newPage().then(page => {
