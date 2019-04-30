@@ -4,13 +4,14 @@ const VIDEO_WIDTH = 1920
 const puppeteer = require('puppeteer')
 const credentials = require('./credentials')
 
-  ; (async () => {
-    await main().then(browser => browser.newPage())
-  })()
+;(async () => {
+  await main()
+})()
 
 function main() {
   let browser
-  return getAndSetBrowser(browser)
+  return getAndSetBrowser()
+    .then(b => {browser = b; return browser})
     .then(getPage)
     .then(goToLoginPage)
     .then(waitForLoading)
@@ -19,12 +20,8 @@ function main() {
     .then(page => finishSession(page, browser))
 }
 
-function getAndSetBrowser(browser) {
+function getAndSetBrowser() {
   return puppeteer.launch(browserOptions())
-    .then(b => {
-      browser = b
-      return browser
-    })
 }
 
 function browserOptions(options) {
