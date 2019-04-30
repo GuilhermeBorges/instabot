@@ -5,5 +5,5 @@ const serviceAccount = require(process.env.FIREBASE_DB_KEY)
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: process.env.FIREBASE_DB_KEY
+  databaseURL: process.env.FIREBASE_DB_KEY //database_config.json, arquivo que baixamos no firebase
 })
