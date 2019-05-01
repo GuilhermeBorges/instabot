@@ -17,6 +17,7 @@ function main() {
     .then(waitForLoading)
     .then(fillCredentials)
     .then(login)
+    .then(closeTurnOnNotificationsModal)
     .then(page => finishSession(page, browser))
 }
 
@@ -53,8 +54,13 @@ function fillCredentials(page) {
     .then(() => page)
 }
 function login(page) {
+
+function closeTurnOnNotificationsModal (page) {
+  return page.waitFor(5000).then(() => {
   return page.evaluate(() => {
-    document.querySelector('button[type=\"submit\"]').click()
+      const notNowButton = Array.from(document.querySelectorAll('button')).find(el => el.textContent === 'Not Now')
+      notNowButton.click()
+    })
   }).then(() => page)
 }
 
