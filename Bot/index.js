@@ -2,7 +2,8 @@ const puppeteer = require('puppeteer')
 const credentials = require('../credentials')
 const DEFAULT_VIDEO_WIDTH = 1920 
 const DEFAULT_VIDEO_HEIGHT = 1080 
-const INSTAGRAM_LOGIN_PAGE_URL = 'https://instagram.com/accounts/login'
+const BASE_URL = 'https://instagram.com'
+const INSTAGRAM_LOGIN_PAGE_URL = `${BASE_URL}/accounts/login`
 const SELECTORS = {
   usernameInput: '[name=username]',
   passwordInput: '[name=password]',
@@ -10,11 +11,14 @@ const SELECTORS = {
   not_now_notification_text_button: 'Not Now',
 }
 class Botzin {
-  constructor(firebaseDb, config) {
+  constructor(firebaseDb, {
+    hashTags
+  } ,config) {
     this.firebaseDb = firebaseDb
     this.config = config
     this.page = null
     this.browser = null
+    this.hashTags = hashTags
     this.selectors = SELECTORS
   }
 
@@ -72,6 +76,7 @@ class Botzin {
       .then(() => this.browser.close())
   }
 
+  goToHashTagUrl(hashTag) { return this.page.goto(`${BASE_URL}/explore/tags/${hashTag}`) }
   get width() { return (this.config && this.config.video_width) || DEFAULT_VIDEO_WIDTH }
   get heigh() { return (this.config && this.config.video_height) || DEFAULT_VIDEO_HEIGHT }
 }
