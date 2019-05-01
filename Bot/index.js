@@ -62,7 +62,7 @@ class Botzin {
   login () { return this.page.click(SELECTORS.login_button) }
 
   closeTurnOnNotificationsModal () {
-    return this.page.waitFor(5000).then(() => {
+    return this.waitHumanTime(4, 6).then(() => {
       return this.page.evaluate(() => {
         const notNowButton = Array.from(document.querySelectorAll('button')).find(el => el.textContent === 'Not Now')
         notNowButton.click()
