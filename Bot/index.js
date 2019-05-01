@@ -46,7 +46,6 @@ class Botzin {
       .then(() => this.fillCredentials())
       .then(() => this.login())
       .then(() => this.closeTurnOnNotificationsModal())
-      .then(() => this.finishSession())
       .catch(e => console.error(e))
   }
 
