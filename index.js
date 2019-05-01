@@ -54,10 +54,12 @@ function fillCredentials(page) {
     .then(() => page)
 }
 function login(page) {
+  return page.click('button[type="submit"]').then(() => page)
+}
 
 function closeTurnOnNotificationsModal (page) {
   return page.waitFor(5000).then(() => {
-  return page.evaluate(() => {
+    return page.evaluate(() => {
       const notNowButton = Array.from(document.querySelectorAll('button')).find(el => el.textContent === 'Not Now')
       notNowButton.click()
     })
