@@ -77,6 +77,12 @@ class Botzin {
   }
 
   goToHashTagUrl(hashTag) { return this.page.goto(`${BASE_URL}/explore/tags/${hashTag}`) }
+
+
+  waitHumanTime (min = 1, max = 5) {
+    const waitTimeInMiliseconds = Math.round((min * 1000) + (Math.random() * 1000) % (max * 1000))
+    return this.page.waitFor(waitTimeInMiliseconds)
+  }
   get width() { return (this.config && this.config.video_width) || DEFAULT_VIDEO_WIDTH }
   get heigh() { return (this.config && this.config.video_height) || DEFAULT_VIDEO_HEIGHT }
 }
