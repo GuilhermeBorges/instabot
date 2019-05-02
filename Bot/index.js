@@ -71,6 +71,12 @@ class Botzin {
       .then(() => this.browser.close())
   }
 
+  async startHashTagsInteraction () {
+    for (let index = 0; index < this.hashTags.length; index ++) {
+      await this.handleHashTag(this.hashTags[index])
+    }
+  }
+
   async handleHashTag (hashTag) {
     const hashTagHandler = new HashTagPage({ page: this.page, hashTag })
     await hashTagHandler.goToHashTagPage()
