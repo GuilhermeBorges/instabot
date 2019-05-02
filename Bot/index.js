@@ -7,7 +7,7 @@ const INSTAGRAM_LOGIN_PAGE_URL = `${BASE_URL}/accounts/login`
 class Botzin {
   constructor(firebaseDb, {
     hashTags
-  } ,config) {
+  }, config) {
     this.firebaseDb = firebaseDb
     this.config = config
     this.likeRatio = config.likeRatio || 1
@@ -42,8 +42,11 @@ class Botzin {
       .then(() => this.setPage())
       .then(() => this.goToLoginPage())
       .then(() => this.waitForLoading())
+      .then(() => this.pretendToBeHuman())
       .then(() => this.fillCredentials())
+      .then(() => this.pretendToBeHuman())
       .then(() => this.login())
+      .then(() => this.pretendToBeHuman())
       .then(() => this.closeTurnOnNotificationsModal())
       .catch(e => console.error(e))
   }
