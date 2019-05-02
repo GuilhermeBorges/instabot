@@ -1,25 +1,9 @@
 const puppeteer = require('puppeteer')
 const credentials = require('../credentials')
-const DEFAULT_VIDEO_WIDTH = 1920 
-const DEFAULT_VIDEO_HEIGHT = 1080 
-const BASE_URL = 'https://instagram.com'
+const SELECTORS = require('./selectors')
+const {DEFAULT_VIDEO_WIDTH, DEFAULT_VIDEO_HEIGHT, BASE_URL} = require('../config')
+const HashTagPage = require('./HashTagPage')
 const INSTAGRAM_LOGIN_PAGE_URL = `${BASE_URL}/accounts/login`
-const SELECTORS = {
-  usernameInput: '[name=username]',
-  passwordInput: '[name=password]',
-  login_button: 'button[type="submit"]',
-  not_now_notification_text_button: 'Not Now',
-  hashtag_page_selectors : {
-    posts_container: '.EZdmt',
-    post_heart_grey: 'span.glyphsSpriteHeart__outline__24__grey_9',
-    post_username: 'div.e1e1d > h2.BrX75 > a',
-    post_like_button: 'span.fr66n > button',
-    post_follow_link: '.bY2yH > button',
-    post_close_button: 'button.ckWGn',
-    button_to_like: 'span.fr66n > button > span[aria-label="Like"]'
-  },
-}
-}
 class Botzin {
   constructor(firebaseDb, {
     hashTags
