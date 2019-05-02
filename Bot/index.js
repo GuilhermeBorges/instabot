@@ -62,7 +62,7 @@ class Botzin {
   login () { return this.page.click(SELECTORS.login_button) }
 
   closeTurnOnNotificationsModal () {
-    return this.waitHumanTime(4, 6).then(() => {
+    return this.pretendToBeHuman(4, 6).then(() => {
       return this.page.evaluate(() => {
         const notNowButton = Array.from(document.querySelectorAll('button')).find(el => el.textContent === 'Not Now')
         notNowButton.click()
@@ -79,7 +79,7 @@ class Botzin {
   goToHashTagUrl(hashTag) { return this.page.goto(`${BASE_URL}/explore/tags/${hashTag}`) }
 
 
-  waitHumanTime (min = 1, max = 5) {
+  pretendToBeHuman (min = 1, max = 5) {
     const waitTimeInMiliseconds = Math.round((min * 1000) + (Math.random() * 1000) % (max * 1000))
     return this.page.waitFor(waitTimeInMiliseconds)
   }
