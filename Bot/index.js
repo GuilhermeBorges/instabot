@@ -71,50 +71,31 @@ class Botzin {
       .then(() => this.browser.close())
   }
 
-  goToHashTagUrl(hashTag) { return this.page.goto(`${BASE_URL}/explore/tags/${hashTag}`) }
-  async vistitPostsLikeAndFollow () {
-    const followUser = () => this.page.click(SELECTORS.hashtag_page_selectors.post_follow_link)
-    const clickOnPost = (row, column) => this.page.click(`${SELECTORS.hashtag_page_selectors.posts_container} > div > div > .Nnq7C:nth-child(${row}) > .v1Nh3:nth-child(${column}) > a`)
-    const isNotLiked = () => (this.page.$(SELECTORS.hashtag_page_selectors.button_to_like))
-    const getUsername = () => {
-      return this.page.evaluate(selectorString => {
-        let element = document.querySelector(selectorString)
-        return Promise.resolve(element ? element.innerHTML : '')
-      }, SELECTORS.hashtag_page_selectors.post_username)
-    }
-    const likePost = () => this.page.click(SELECTORS.hashtag_page_selectors.post_like_button)
-    const isNotFollowing = () => {
-      return this.page.evaluate(selectorString => {
-        let element = document.querySelector(selectorString)
-        return Promise.resolve(element ? element.innerHTML : '')
-      }, SELECTORS.hashtag_page_selectors.post_follow_link).then(status => status === 'Follow')
-    }
-    const closePostModal = () => this.page.click(SELECTORS.hashtag_page_selectors.post_close_button).catch((e) => { console.log('<<< ERROR CLOSING POST >>>' + e.message); console.error(e) })
-    for (let r = 1; r < 4; r++) {//loops through each row
-      for (let c = 1; c < 4; c++) {//loops through each item in the row
+  async handleHashTag (hashTag) {
+    const hashTagHandler = new HashTagPage({ page: this.page, hashTag })
+    await hashTagHandler.goToHashTagPage()
+    const posts = hashTagHandler.getFirst9Posts()
+    for (let index = 0; index < posts.length; index ++) {
+      let errorClicking = false
+      await hashTagHandler.clickOnPost(posts[index]).catch(e => {console.log(e); errorClicking = true})
+      if (errorClicking) continue
+      await this.pretendToBeHuman()
 
-        let postSelected = false
-        await clickOnPost(r, c)
-          .catch((e) => {
-            console.log(e.message)
-            postSelected = true
-          })
-        await this.pretendToBeHuman()
-        if (postSelected) continue // if successfully selecting post continue
-        if ((await isNotLiked()) && Math.random() < this.likeRatio) {
-          await likePost()
-          await this.pretendToBeHuman()
-        }
-
-        // TODO: adicionar firebase, verificar se já não segui / desegui o usuário
-        // let username = await getUsername()
-        if (await isNotFollowing()) {
-          await followUser()
-          await this.pretendToBeHuman()
-        }
-        await closePostModal()
+      const isNotLiked = await hashTagHandler.isNotLiked()
+      if (isNotLiked && Math.random() < this.likeRatio) {
+        await hashTagHandler.likePost()
         await this.pretendToBeHuman()
       }
+
+      // TODO: adicionar firebase, verificar se já não segui / desegui o usuário
+      const isNotFollowing = await hashTagHandler.isNotFollowing()
+      if (isNotFollowing) {
+        await hashTagHandler.followUser()
+        await this.pretendToBeHuman()
+      }
+
+      await hashTagHandler.closePostModal()
+      await this.pretendToBeHuman()
     }
   }
 
