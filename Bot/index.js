@@ -42,8 +42,11 @@ class Botzin {
       .then(() => this.setPage())
       .then(() => this.goToLoginPage())
       .then(() => this.waitForLoading())
+      .then(() => this.pretendToBeHuman())
       .then(() => this.fillCredentials())
+      .then(() => this.pretendToBeHuman())
       .then(() => this.login())
+      .then(() => this.pretendToBeHuman())
       .then(() => this.closeTurnOnNotificationsModal())
       .catch(e => console.error(e))
   }
