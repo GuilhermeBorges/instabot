@@ -9,6 +9,16 @@ const SELECTORS = {
   passwordInput: '[name=password]',
   login_button: 'button[type="submit"]',
   not_now_notification_text_button: 'Not Now',
+  hashtag_page_selectors : {
+    posts_container: '.EZdmt',
+    post_heart_grey: 'span.glyphsSpriteHeart__outline__24__grey_9',
+    post_username: 'div.e1e1d > h2.BrX75 > a',
+    post_like_button: 'span.fr66n > button',
+    post_follow_link: '.bY2yH > button',
+    post_close_button: 'button.ckWGn',
+    button_to_like: 'span.fr66n > button > span[aria-label="Like"]'
+  },
+}
 }
 class Botzin {
   constructor(firebaseDb, {
@@ -16,6 +26,7 @@ class Botzin {
   } ,config) {
     this.firebaseDb = firebaseDb
     this.config = config
+    this.likeRatio = config.likeRatio || 1
     this.page = null
     this.browser = null
     this.hashTags = hashTags
@@ -77,7 +88,51 @@ class Botzin {
   }
 
   goToHashTagUrl(hashTag) { return this.page.goto(`${BASE_URL}/explore/tags/${hashTag}`) }
+  async vistitPostsLikeAndFollow () {
+    const followUser = () => this.page.click(SELECTORS.hashtag_page_selectors.post_follow_link)
+    const clickOnPost = (row, column) => this.page.click(`${SELECTORS.hashtag_page_selectors.posts_container} > div > div > .Nnq7C:nth-child(${row}) > .v1Nh3:nth-child(${column}) > a`)
+    const isNotLiked = () => (this.page.$(SELECTORS.hashtag_page_selectors.button_to_like))
+    const getUsername = () => {
+      return this.page.evaluate(selectorString => {
+        let element = document.querySelector(selectorString)
+        return Promise.resolve(element ? element.innerHTML : '')
+      }, SELECTORS.hashtag_page_selectors.post_username)
+    }
+    const likePost = () => this.page.click(SELECTORS.hashtag_page_selectors.post_like_button)
+    const isNotFollowing = () => {
+      return this.page.evaluate(selectorString => {
+        let element = document.querySelector(selectorString)
+        return Promise.resolve(element ? element.innerHTML : '')
+      }, SELECTORS.hashtag_page_selectors.post_follow_link).then(status => status === 'Follow')
+    }
+    const closePostModal = () => this.page.click(SELECTORS.hashtag_page_selectors.post_close_button).catch((e) => { console.log('<<< ERROR CLOSING POST >>>' + e.message); console.error(e) })
+    for (let r = 1; r < 4; r++) {//loops through each row
+      for (let c = 1; c < 4; c++) {//loops through each item in the row
 
+        let postSelected = false
+        await clickOnPost(r, c)
+          .catch((e) => {
+            console.log(e.message)
+            postSelected = true
+          })
+        await this.pretendToBeHuman()
+        if (postSelected) continue // if successfully selecting post continue
+        if ((await isNotLiked()) && Math.random() < this.likeRatio) {
+          await likePost()
+          await this.pretendToBeHuman()
+        }
+
+        // TODO: adicionar firebase, verificar se já não segui / desegui o usuário
+        // let username = await getUsername()
+        if (await isNotFollowing()) {
+          await followUser()
+          await this.pretendToBeHuman()
+        }
+        await closePostModal()
+        await this.pretendToBeHuman()
+      }
+    }
+  }
 
   pretendToBeHuman (min = 1, max = 5) {
     const waitTimeInMiliseconds = Math.round((min * 1000) + (Math.random() * 1000) % (max * 1000))
