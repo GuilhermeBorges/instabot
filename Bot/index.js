@@ -75,7 +75,7 @@ class Botzin {
     const shuffle = (array) => array.slice().sort(() => Math.random() - 0.5)
     const hashTagArray = shuffle(this.hashTags)
     for (let index = 0; index < hashTagArray.length; index ++) {
-      await this.handleHashTag(this.hashTags[index])
+      await this.handleHashTag(hashTagArray[index])
     }
   }
 
