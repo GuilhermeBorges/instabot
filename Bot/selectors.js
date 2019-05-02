@@ -10,7 +10,10 @@ module.exports = {
     post_like_button: 'span.fr66n > button',
     post_follow_link: '.bY2yH > button',
     post_close_button: 'button.ckWGn',
-    button_to_like: 'span.fr66n > button > span[aria-label="Like"]'
+    button_to_like: 'span.fr66n > button > span[aria-label="Like"]',
+    people_who_liked: {
+      eleven_users: '.pbNvD > div:nth-child(2) > div > div > div'
+    }
   },
   selectors: {
     "home_to_login_button": ".izU2O a",
