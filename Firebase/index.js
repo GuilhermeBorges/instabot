@@ -20,3 +20,10 @@ const getFollowings = () => following().once('value').then(data => data.val())
 const unFollow = username => following(username).remove().then(() => followHistory(username).set({ username }))
 
 const inHistory = async username => followHistory(username).once('value').then(data => data.val())
+
+module.exports = {
+  addFollowing,
+  getFollowings,
+  unFollow,
+  inHistory
+}
