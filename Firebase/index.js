@@ -1,13 +1,6 @@
 require('dotenv').config({ path: '.env' })
 const firebase = require('firebase-admin')
-const config = require(process.env.FIREBASE_DB_KEY)
-
-module.exports = {
-  addFollowing,
-  getFollowings,
-  unFollow,
-  inHistory
-}
+const config = require(`../${process.env.FIREBASE_DB_KEY}`)
 
 firebase.initializeApp({
   credential: firebase.credential.cert(config),
