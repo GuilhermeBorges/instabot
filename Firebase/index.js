@@ -11,7 +11,7 @@ module.exports = {
 
 firebase.initializeApp({
   credential: firebase.credential.cert(config),
-  databaseURL: process.env.FIREBASE_DB_KEY //database_config.json, arquivo que baixamos no firebase
+  databaseURL: process.env.DATABASE_URL //database_config.json, arquivo que baixamos no firebase
 })
 
 const database = firebase.database()
