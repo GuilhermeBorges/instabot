@@ -50,7 +50,7 @@ class Botzin {
       .then(this.closeTurnOnNotificationsModal.bind(this))
       .catch(e => console.error(e))
   }
-
+ 
   goToLoginPage () { return this.page.goto(INSTAGRAM_LOGIN_PAGE_URL) }
   waitForLoading () { return this.page.waitFor(() => document.querySelectorAll('input').length) }
   fillCredentials () {
