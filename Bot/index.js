@@ -4,6 +4,8 @@ const SELECTORS = require('./selectors')
 const {DEFAULT_VIDEO_WIDTH, DEFAULT_VIDEO_HEIGHT, BASE_URL} = require('../config')
 const HashTagPage = require('./HashTagPage')
 const INSTAGRAM_LOGIN_PAGE_URL = `${BASE_URL}/accounts/login`
+const DAO = require('../Firebase')
+
 class Botzin {
   constructor(firebaseDb, {
     hashTags
@@ -50,7 +52,7 @@ class Botzin {
       .then(this.closeTurnOnNotificationsModal.bind(this))
       .catch(e => console.error(e))
   }
- 
+
   goToLoginPage () { return this.page.goto(INSTAGRAM_LOGIN_PAGE_URL) }
   waitForLoading () { return this.page.waitFor(() => document.querySelectorAll('input').length) }
   fillCredentials () {
@@ -98,11 +100,19 @@ class Botzin {
         await this.pretendToBeHuman()
       }
 
-      // TODO: adicionar firebase, verificar se já não segui / desegui o usuário
+      const username = await this.page.evaluate(x => {
+        let element = document.querySelector(x);
+        return Promise.resolve(element ? element.innerHTML : '')
+      }, this.selectors.hashtag_page_selectors.post_username)
+
       const isNotFollowing = await hashTagHandler.isNotFollowing()
       if (isNotFollowing) {
-        await hashTagHandler.followUser()
-        await this.pretendToBeHuman()
+        const isInHistory = await DAO.inHistory(username)
+        if (!isInHistory) {
+          await hashTagHandler.followUser()
+          await DAO.addFollowing(username)
+          await this.pretendToBeHuman()
+        }
       }
 
       await hashTagHandler.closePostModal()
