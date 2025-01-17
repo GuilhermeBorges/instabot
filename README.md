@@ -1,1 +1,1 @@
-Proof of Concept for an Instagram BOT
+Proof of Concept for an Instagram BOTZIN
